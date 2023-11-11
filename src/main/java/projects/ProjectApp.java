@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.Scanner;
 import java.math.BigDecimal;
 
+
 import projects.entity.Project;
 import projects.exception.DbException;
 import projects.services.ProjectService;
@@ -13,12 +14,14 @@ import projects.services.ProjectService;
 public class ProjectApp {
 	
 	private	ProjectService projectService = new ProjectService();
-	
+	Project curProject;
 	
 //@formatter:off
 	
 	private List <String> operations = List.of(
-			"1) Add a project." 
+			"1) Add a project." ,
+			"2) List Projects",
+			"3) Select a Project"
 			
 			);
 //@formatter:on
@@ -41,16 +44,45 @@ public class ProjectApp {
 				case 1:
 					createProject();
 					break;
+				case 2: 
+					listProject();
+					break;
+				case 3:
+					selectProject();
+					break;
 				default: 
 					System.out.println("\n" + selection + " is not a valid selection, please try again");
 				
 				}
 			}catch(Exception e) {
-				System.out.println("\nError:" + e + "Try again.");
+				System.out.println("\nError:" + e + " Try again.");
 			}
 			
 		}
 				
+	}
+	private void selectProject() {
+		// TODO Auto-generated method stub
+		listProject();
+		Integer projectId = getIntInput("Enter a Project Id to select a project");
+		
+		curProject = null;
+		 
+		curProject = projectService.fetchProjectById(projectId);
+		if(Objects.isNull(curProject)) {
+			System.out.println("\n You are not working with a project");
+			
+		}else {
+			System.out.println("\n You are working with project: " +curProject);
+		}
+	}
+	private void listProject() {
+		
+		List <Project> projects = projectService.fetchAllProjects();
+		System.out.println("\nProjects: ");
+		projects.forEach(project -> System.out.println(" " + project.getProjectId() 
+		 + ": " +project.getProjectName()));
+		
 	}
 	private void createProject() {
 		// TODO Auto-generated method stub
